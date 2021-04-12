@@ -26,7 +26,7 @@ use curve25519_dalek::{
     ristretto::{RistrettoBasepointTable, RistrettoPoint},
     scalar::Scalar,
 };
-use rand::{CryptoRng, Rng};
+use rand::{CryptoRng, RngCore};
 use scuttlebutt::{AbstractChannel, Block, Malicious, SemiHonest};
 
 /// Oblivious transfer sender.
@@ -39,7 +39,7 @@ pub struct Sender {
 impl OtSender for Sender {
     type Msg = Block;
 
-    fn init<C: AbstractChannel, RNG: CryptoRng + Rng>(
+    fn init<C: AbstractChannel, RNG: CryptoRng + RngCore>(
         channel: &mut C,
         mut rng: &mut RNG,
     ) -> Result<Self, Error> {
@@ -50,7 +50,7 @@ impl OtSender for Sender {
         Ok(Self { y, s, counter: 0 })
     }
 
-    fn send<C: AbstractChannel, RNG: CryptoRng + Rng>(
+    fn send<C: AbstractChannel, RNG: CryptoRng + RngCore>(
         &mut self,
         channel: &mut C,
         inputs: &[(Block, Block)],
@@ -93,7 +93,7 @@ pub struct Receiver {
 impl OtReceiver for Receiver {
     type Msg = Block;
 
-    fn init<C: AbstractChannel, RNG: CryptoRng + Rng>(
+    fn init<C: AbstractChannel, RNG: CryptoRng + RngCore>(
         channel: &mut C,
         _: &mut RNG,
     ) -> Result<Self, Error> {
@@ -102,7 +102,7 @@ impl OtReceiver for Receiver {
         Ok(Self { s, counter: 0 })
     }
 
-    fn receive<C: AbstractChannel, RNG: CryptoRng + Rng>(
+    fn receive<C: AbstractChannel, RNG: CryptoRng + RngCore>(
         &mut self,
         channel: &mut C,
         inputs: &[bool],

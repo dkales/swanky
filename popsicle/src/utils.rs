@@ -25,8 +25,8 @@ pub fn compress_and_hash_inputs(inputs: &[Vec<u8>], key: Block) -> Vec<Block> {
                 digest[0..input.len()].copy_from_slice(input);
             } else {
                 // Hash `input` first.
-                hasher.input(input);
-                let h = hasher.result_reset();
+                hasher.update(input);
+                let h = hasher.finalize_reset();
                 digest[0..16].copy_from_slice(&h[0..16]);
             }
             let block = aes.cr_hash(Block::from(i as u128), Block::from(digest));
